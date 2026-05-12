@@ -1,0 +1,21 @@
+.aknadiv{
+    border: 3px solid;
+    background-color: lightgray;
+    border-top-color: whitesmoke;
+    border-left-color: whitesmoke;
+    border-right-color: gray;
+    border-bottom-color: gray;
+}
+
+
+
+#aknamezo{
+    display: grid;
+    grid-template-columns: repeat(30, 25px);
+    grid-template-rows: repeat(16, 25px);
+    gap: 0px;
+}
+
+.kattintott{
+    border: gray solid 0.5px;
+}
