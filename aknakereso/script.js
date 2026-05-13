@@ -30,13 +30,89 @@ function aknadivek_letrehozasa(div_aknamezo, sor, oszlop) {
     }
 }
 
+/**
+ * @param {Array[Array[int]]} akna_map aknatérkép
+ * @param {int} j oszlop
+ * @param {int} i sor
+ * @returns {int} a szomszédos aknák száma
+ */
+function hanySzomszedosAknaVanItt(akna_map, j, i) {
+    let db = 0;
+
+    for (let f = -1; f <= 1; f++) {
+        for (let v = -1; v <= 1; v++) {
+            if (0 <= j+f && j+f < N && 0 <= i+v && i+v < M && akna_map[j+f][i+v] === 1) {
+                    db++;
+            }
+        }
+    }
+
+    return db;
+}
+
+/**
+ * 
+ * @param {Array[Array[int]]} akna_map aknatérkép
+ * @returns {void} felfedi az összes aknát a mezőn
+ */
+function osszes_akna_felfedese(akna_map){
+    for (let j = 0; j < M; j++) {
+        for (let i = 0; i < N; i++) {
+            if (akna_map[i][j] === 1) {
+                let akna_div = document.getElementById(j + "_" + i);
+                akna_div.innerHTML = "&#128163;"; // akna emoji
+                akna_div.classList.add("kattintott");
+            }
+        }
+    }
+}
+
+
+function akna_by_id(j, i) {
+    return document.getElementById(j + "_" + i);
+}
+
+
+/**
+ * 
+ * @param {int} j oszlop
+ * @param {int} i sor
+ * @return {void} felfed
+ */
+function felfed(akna_map, j, i) {
+    console.log("felfed: " + j + "_" + i);
+    let szam = hanySzomszedosAknaVanItt(akna_map, j, i);
+    let aknadiv = akna_by_id(i, j);
+    aknadiv.classList.add("kattintott");
+    if (szam != 0) {
+        aknadiv.innerHTML = szam;
+    } else {
+        for (let f = -1; f <= 1; f++) {
+            for (let v = -1; v <= 1; v++) {
+                if (0 <= j+f && j+f < N && 0 <= i+v && i+v < M && !akna_by_id(j+f, i+v).classList.contains("kattintott")) {
+                    felfed(akna_map, j+f, i+v);
+                }
+            }
+        }
+    }
+}
+
 function akna_balkatt(e) {
     // alert("katt: " + e.target.id);
     let kattintott_akna = e.target;
-    kattintott_akna.classList.add("kattintott");
-        // kattintott_akna.innerHTML = "&#128163;"; // akna emoji
+    // kattintott_akna.classList.add("kattintott");
     // aknára nyomtunk-e?
-    // akna_map
+    
+    let idkod = kattintott_akna.id; // "3_12"
+    let par = idkod.split("_"); // ["3", "12"]
+    let i = parseInt(par[0]);   // 3
+    let j = parseInt(par[1]);   // 12
+
+    if(akna_map[j][i] === 1) {
+        osszes_akna_felfedese(akna_map);    
+    } else {
+        felfed(akna_map, j, i);
+    }
 
 }
 
